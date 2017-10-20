@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MoodTracker</string>
+    <string name="smiley_image">smiley image</string>
+    <string name="history_icon">history icon</string>
+    <string name="new_note_icon">new note icon</string>
 </resources>
