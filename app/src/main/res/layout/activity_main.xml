@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout is inflated in MainActivity.
+    This activity shows the current mood and
+    enables the user to change it with vertical swipes.
+    This activity also allows the user to add a commentary
+    or to access the history.
+-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/main_activity_mood_pager"
+        android:id="@+id/mood_pager"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/light_sage"/>
+        android:layout_height="wrap_content"/>
 
     <ImageView
-        android:id="@+id/main_activity_new_note_img"
+        android:id="@+id/new_note_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -20,7 +26,7 @@
         android:contentDescription="@string/new_note_icon"/>
 
     <ImageView
-        android:id="@+id/main_activity_history_img"
+        android:id="@+id/history_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
