@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">MoodTracker</string>
+
     <string name="smiley_image">smiley image</string>
     <string name="history_icon">history icon</string>
     <string name="new_note_icon">new note icon</string>
+
+    <string name="dialog_positive_btn">Validate</string>
+    <string name="dialog_negative_btn">Cancel</string>
+
+    <string name="edit_text_hint">Commentary</string>
+    <string name="text_input_layout_error_msg">The character \';\' is not allowed!</string>
 </resources>

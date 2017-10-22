@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout is inflated in the commentary dialog in MainActivity.
+    It shows a floating label when the EditText's hint is hidden
+    due to the user inputting text.
+-->
+<android.support.design.widget.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:errorTextAppearance="@string/text_input_layout_error_msg">
+
+    <EditText
+        android:id="@+id/commentary_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_text_hint"/>
+
+</android.support.design.widget.TextInputLayout>

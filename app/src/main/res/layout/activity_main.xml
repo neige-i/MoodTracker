@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"/>
 
     <ImageView
-        android:id="@+id/new_note_img"
+        android:id="@+id/new_note_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -26,7 +26,7 @@
         android:contentDescription="@string/new_note_icon"/>
 
     <ImageView
-        android:id="@+id/history_img"
+        android:id="@+id/history_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
