@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mMoodPager;
+    private VerticalViewPager mMoodPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
         Mood.initDrawables();
         Mood.initColours();
 
-        mMoodPager = (ViewPager) findViewById(R.id.mood_pager);
+        mMoodPager = (VerticalViewPager) findViewById(R.id.mood_pager);
         mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
-        mMoodPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mMoodPager.setBackgroundResource(Mood.MOOD_COLOURS[position]);
