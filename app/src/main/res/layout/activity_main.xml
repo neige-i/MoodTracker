@@ -11,10 +11,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
+        CAUTION: INITIALIZE THE BACKGROUND TO FADE_RED COLOR!
+        The following pager can have different backgrounds.
+        Its adapter's default position is 0.
+        The background is updated only if the position is changed.
+        At application start, if the position to show is the item #0,
+        then the background is unchanged and remains as the default one.
+        That is why, the default background must be defined with
+        the faded_red color because it corresponds to the item #0.
+    -->
     <fr.castorflex.android.verticalviewpager.VerticalViewPager
         android:id="@+id/mood_pager"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/faded_red"/>
 
     <ImageView
         android:id="@+id/new_note_ic"

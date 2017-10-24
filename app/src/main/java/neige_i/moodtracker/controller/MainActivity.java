@@ -20,8 +20,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private VerticalViewPager mMoodPager;
     private String mCommentary;
+    private int mMood;
     private SharedPreferences mPreferences;
     private EditText mEditText;
+    private boolean clearCommentaryPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mPreferences = getPreferences(MODE_PRIVATE);
+        mMood = mPreferences.getInt("mood", Mood.DEFAULT_MOOD);
         mCommentary = mPreferences.getString("commentary", null);
 
         Mood.initDrawables();
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mMoodPager.setBackgroundResource(Mood.MOOD_COLOURS[position]);
             }
         });
-        mMoodPager.setCurrentItem(mPreferences.getInt("mood", Mood.DEFAULT_MOOD));
+        mMoodPager.setCurrentItem(mMood);
 
         findViewById(R.id.new_note_ic).setOnClickListener(this);
         findViewById(R.id.history_ic).setOnClickListener(this);
@@ -57,8 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (mEditText.getText().length() > 0)
+                                if (mEditText.getText().length() > 0) {
                                     mCommentary = mEditText.getText().toString();
+                                    mMood = mMoodPager.getCurrentItem();
+                                    clearCommentaryPref = false;
+                                }
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_btn, null)
@@ -66,8 +72,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 commentaryDialog.show();
 
+                clearCommentaryPref = mMoodPager.getCurrentItem() != mMood;
+
                 mEditText = commentaryDialog.findViewById(R.id.commentary_input);
-                if (mCommentary != null) {
+                if (mCommentary != null && !clearCommentaryPref) {
                     mEditText.setText(mCommentary);
                     mEditText.setSelection(mCommentary.length());
                 }
@@ -82,7 +90,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         mPreferences.edit().putInt("mood", mMoodPager.getCurrentItem()).apply();
-        if (mCommentary != null)
+        mPreferences.edit().remove("commentary").apply();
+//        Log.i("EditText content", mEditText.getText().length() + " -> " + mEditText.getText());
+        if (mCommentary != null && !clearCommentaryPref)
             mPreferences.edit().putString("commentary", mCommentary).apply();
     }
 }
