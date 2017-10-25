@@ -1,6 +1,8 @@
 package neige_i.moodtracker.model;
 
-import neige_i.moodtracker.R;
+import static neige_i.moodtracker.controller.MainActivity.DEFAULT_MOOD;
+import static neige_i.moodtracker.controller.MainActivity.MOOD_COUNT;
+import static neige_i.moodtracker.controller.MainActivity.NO_MOOD;
 
 /**
  * Created by neige-i on 25/10/2017.
@@ -11,8 +13,13 @@ public class Mood {
     private int mSmiley;
     private String mCommentary;
 
+    public Mood() {
+        mSmiley = NO_MOOD;
+        mCommentary = null;
+    }
+
     public Mood(int smiley, String commentary) {
-        mSmiley = smiley;
+        try { setSmiley(smiley); } catch (IndexOutOfBoundsException ignored) {}
         mCommentary = commentary;
     }
 
@@ -21,8 +28,9 @@ public class Mood {
     }
 
     public void setSmiley(int smiley) {
-        if (smiley < 0 || smiley > 4)
-            throw new IndexOutOfBoundsException("The value must be in the following range [0;5[.");
+        mSmiley = DEFAULT_MOOD;
+        if ((smiley < 0 || smiley >= MOOD_COUNT) && smiley != NO_MOOD)
+            throw new IndexOutOfBoundsException("The value must be in the following range [0;" + MOOD_COUNT + "[.");
         mSmiley = smiley;
     }
 
@@ -36,6 +44,6 @@ public class Mood {
 
     @Override
     public String toString() {
-        return mSmiley + mCommentary;
+        return mSmiley + (mCommentary != null ? mCommentary : "");
     }
 }

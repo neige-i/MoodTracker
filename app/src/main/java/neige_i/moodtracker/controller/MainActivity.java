@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean clearCommentaryPref;
 
     public static final int MOOD_COUNT = 5;
+    public static final int DEFAULT_MOOD = 3;
+    public static final int NO_MOOD = 9;
     public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
-    public final int[] MOOD_COLOURS = new int[MOOD_COUNT];
-    public final int DEFAULT_MOOD = 3;
+    public static final int[] MOOD_COLOURS = new int[MOOD_COUNT];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
