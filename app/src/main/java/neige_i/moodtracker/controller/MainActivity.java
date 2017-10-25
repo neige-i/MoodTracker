@@ -19,7 +19,6 @@ import java.util.Calendar;
 
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
-import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefResetReceiver;
 
@@ -27,10 +26,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private VerticalViewPager mMoodPager;
     private String mCommentary;
-    private int mMood;
+    private int mSmiley;
     private SharedPreferences mPreferences;
     private EditText mEditText;
     private boolean clearCommentaryPref;
+
+    public static final int MOOD_COUNT = 5;
+    public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
+    public final int[] MOOD_COLOURS = new int[MOOD_COUNT];
+    public final int DEFAULT_MOOD = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +44,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         schedulePrefReset();
 
         mPreferences = getPreferences(MODE_PRIVATE);
-        mMood = mPreferences.getInt("mood", Mood.DEFAULT_MOOD);
+        mSmiley = mPreferences.getInt("mood", DEFAULT_MOOD);
         mCommentary = mPreferences.getString("commentary", null);
 
-        Mood.initDrawables();
-        Mood.initColours();
+        initDrawables();
+        initColours();
 
         mMoodPager = findViewById(R.id.mood_pager);
         mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
         mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mMoodPager.setBackgroundResource(Mood.MOOD_COLOURS[position]);
-                clearCommentaryPref = mMoodPager.getCurrentItem() != mMood;
+                mMoodPager.setBackgroundResource(MOOD_COLOURS[position]);
+                clearCommentaryPref = mMoodPager.getCurrentItem() != mSmiley;
             }
         });
-        mMoodPager.setCurrentItem(mMood);
+        mMoodPager.setCurrentItem(mSmiley);
 
         findViewById(R.id.new_note_ic).setOnClickListener(this);
         findViewById(R.id.history_ic).setOnClickListener(this);
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mEditText.getText().length() > 0) {
                                     mCommentary = mEditText.getText().toString();
-                                    mMood = mMoodPager.getCurrentItem();
+                                    mSmiley = mMoodPager.getCurrentItem();
                                     clearCommentaryPref = false;
                                 }
                             }
@@ -102,6 +106,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Log.i("EditText content", mEditText.getText().length() + " -> " + mEditText.getText());
         if (mCommentary != null && !clearCommentaryPref)
             mPreferences.edit().putString("commentary", mCommentary).apply();
+    }
+
+    private void initDrawables() {
+        MOOD_DRAWABLES[0] = R.drawable.smiley_sad;
+        MOOD_DRAWABLES[1] = R.drawable.smiley_disappointed;
+        MOOD_DRAWABLES[2] = R.drawable.smiley_normal;
+        MOOD_DRAWABLES[3] = R.drawable.smiley_happy;
+        MOOD_DRAWABLES[4] = R.drawable.smiley_super_happy;
+    }
+
+    private void initColours() {
+        MOOD_COLOURS[0] = R.color.faded_red;
+        MOOD_COLOURS[1] = R.color.warm_grey;
+        MOOD_COLOURS[2] = R.color.cornflower_blue_65;
+        MOOD_COLOURS[3] = R.color.light_sage;
+        MOOD_COLOURS[4] = R.color.banana_yellow;
     }
 
     private void schedulePrefReset() {
