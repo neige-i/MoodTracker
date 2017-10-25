@@ -1,6 +1,10 @@
 package neige_i.moodtracker.controller;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -11,10 +15,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
+import neige_i.moodtracker.model.PrefResetReceiver;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        schedulePrefReset();
+
         mPreferences = getPreferences(MODE_PRIVATE);
         mMood = mPreferences.getInt("mood", Mood.DEFAULT_MOOD);
         mCommentary = mPreferences.getString("commentary", null);
@@ -43,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 mMoodPager.setBackgroundResource(Mood.MOOD_COLOURS[position]);
+                clearCommentaryPref = mMoodPager.getCurrentItem() != mMood;
             }
         });
         mMoodPager.setCurrentItem(mMood);
@@ -72,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 commentaryDialog.show();
 
-                clearCommentaryPref = mMoodPager.getCurrentItem() != mMood;
-
                 mEditText = commentaryDialog.findViewById(R.id.commentary_input);
                 if (mCommentary != null && !clearCommentaryPref) {
                     mEditText.setText(mCommentary);
@@ -94,5 +102,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Log.i("EditText content", mEditText.getText().length() + " -> " + mEditText.getText());
         if (mCommentary != null && !clearCommentaryPref)
             mPreferences.edit().putString("commentary", mCommentary).apply();
+    }
+
+    private void schedulePrefReset() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis()); // See if mandatory
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefResetReceiver.class), 0);
+
+        ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                                                                    calendar.getTimeInMillis(),
+                                                                                    AlarmManager.INTERVAL_DAY,
+                                                                                    broadcast);
     }
 }
