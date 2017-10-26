@@ -6,18 +6,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import neige_i.moodtracker.controller.SmileyFragment;
 
-import static neige_i.moodtracker.controller.MainActivity.MOOD_COUNT;
 import static neige_i.moodtracker.controller.MainActivity.MOOD_DRAWABLES;
+import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 
 /**
- * Created by neige-i on 20/10/2017.
+ * This PagerAdapter allows user to swipe between the different moods.
  */
-
 public class MoodPagerAdapter extends FragmentPagerAdapter {
+    // ----------------------------------------     CONSTRUCTORS     ----------------------------------------
 
     public MoodPagerAdapter(FragmentManager fm) {
         super(fm);
     }
+
+    // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
     @Override
     public Fragment getItem(int position) {

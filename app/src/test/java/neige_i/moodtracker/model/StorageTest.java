@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static neige_i.moodtracker.controller.MainActivity.DEFAULT_MOOD;
+import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -27,7 +27,7 @@ public class StorageTest {
                                             new Mood(4, "Great!"),
                                             new Mood(3, "Yeah"),
                                             new Mood(0, "WHAT!!!"),
-                                            new Mood(DEFAULT_MOOD, "etter"),
+                                            new Mood(MOOD_DEFAULT, "etter"),
                                             new Mood(),
                                             new Mood(1, null),
                                             new Mood(0, "Angry"));

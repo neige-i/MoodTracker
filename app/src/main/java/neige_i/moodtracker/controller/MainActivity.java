@@ -20,9 +20,13 @@ import java.util.Calendar;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.MoodPagerAdapter;
-import neige_i.moodtracker.model.PrefResetReceiver;
+import neige_i.moodtracker.model.PrefUpdateReceiver;
+
+import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
+import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
 
     private VerticalViewPager mMoodPager;
     private String mCommentary;
@@ -31,37 +35,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText mEditText;
     private boolean clearCommentaryPref;
 
-    public static final int MOOD_COUNT = 5;
-    public static final int DEFAULT_MOOD = 3;
-    public static final int NO_MOOD = 9;
+    // ---------------------------------------     CLASS VARIABLES     --------------------------------------
+
     public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
     public static final int[] MOOD_COLOURS = new int[MOOD_COUNT];
+
+    // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        schedulePrefReset();
+        schedulePrefUpdate();
 
-        mPreferences = getPreferences(MODE_PRIVATE);
-        mSmiley = mPreferences.getInt("mood", DEFAULT_MOOD);
-        mCommentary = mPreferences.getString("commentary", null);
+        initPrefs();
 
         initDrawables();
         initColours();
 
-        mMoodPager = findViewById(R.id.mood_pager);
-        mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
-        mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mMoodPager.setBackgroundResource(MOOD_COLOURS[position]);
-                clearCommentaryPref = mMoodPager.getCurrentItem() != mSmiley;
-            }
-        });
-        mMoodPager.setCurrentItem(mSmiley);
-
+        initMoodPager();
         findViewById(R.id.new_note_ic).setOnClickListener(this);
         findViewById(R.id.history_ic).setOnClickListener(this);
     }
@@ -102,11 +95,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
+        // Save data
         mPreferences.edit().putInt("mood", mMoodPager.getCurrentItem()).apply();
         mPreferences.edit().remove("commentary").apply();
 //        Log.i("EditText content", mEditText.getText().length() + " -> " + mEditText.getText());
         if (mCommentary != null && !clearCommentaryPref)
             mPreferences.edit().putString("commentary", mCommentary).apply();
+    }
+
+    // ---------------------------------------     PRIVATE METHODS     --------------------------------------
+
+    private void initPrefs() {
+        mPreferences = getPreferences(MODE_PRIVATE);
+        mSmiley = mPreferences.getInt("mood", MOOD_DEFAULT);
+        mCommentary = mPreferences.getString("commentary", null);
     }
 
     private void initDrawables() {
@@ -125,13 +127,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MOOD_COLOURS[4] = R.color.banana_yellow;
     }
 
-    private void schedulePrefReset() {
+    private void initMoodPager() {
+        mMoodPager = findViewById(R.id.mood_pager);
+        mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
+        mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mMoodPager.setBackgroundResource(MOOD_COLOURS[position]);
+                clearCommentaryPref = mMoodPager.getCurrentItem() != mSmiley;
+            }
+        });
+        mMoodPager.setCurrentItem(mSmiley);
+    }
+
+    private void schedulePrefUpdate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis()); // See if mandatory
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
 
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefResetReceiver.class), 0);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), 0);
 
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP,
                                                                                     calendar.getTimeInMillis(),

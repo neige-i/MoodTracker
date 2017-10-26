@@ -11,25 +11,42 @@ import android.widget.ImageView;
 import neige_i.moodtracker.R;
 
 /**
- * Created by neige-i on 21/10/2017.
+ * This fragment is used in a ViewPager.
+ * It contains an ImageView which resource is modified in order to change the smiley that is shown.
  */
-
 public class SmileyFragment extends Fragment {
+    // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
-    public static SmileyFragment newInstance(int smileyResource) {
-        Bundle args = new Bundle();
-        args.putInt("smileyResource", smileyResource);
+    private static final String BUNDLE_ARGS_SMILEY_ID = "BUNDLE_ARGS_SMILEY_ID";
 
-        SmileyFragment fragment = new SmileyFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout from the XML file
         ViewGroup relativeLayout = (ViewGroup) inflater.inflate(R.layout.fragment_smiley, container, false);
-        ((ImageView) relativeLayout.findViewById(R.id.smiley_img)).setImageResource(getArguments().getInt("smileyResource"));
+
+        // Set the resource according to the bundle arguments
+        ((ImageView) relativeLayout.findViewById(R.id.smiley_img)).setImageResource(getArguments().getInt(BUNDLE_ARGS_SMILEY_ID));
+
         return relativeLayout;
+    }
+
+    // ---------------------------------------     STATIC METHODS     ---------------------------------------
+
+    /**
+     * Creates a new instance of this class with the specified resource ID.
+     * This method allows displaying the appropriate smiley according to specified argument.
+     * @param smileyResource the ID of the drawable to show.
+     * @return an instance of this class with a drawable ID put into bundle arguments.
+     */
+    public static SmileyFragment newInstance(int smileyResource) {
+        Bundle args = new Bundle();
+        args.putInt(BUNDLE_ARGS_SMILEY_ID, smileyResource);
+
+        SmileyFragment fragment = new SmileyFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 }
