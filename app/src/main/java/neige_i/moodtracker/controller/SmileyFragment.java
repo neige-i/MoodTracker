@@ -12,11 +12,15 @@ import neige_i.moodtracker.R;
 
 /**
  * This fragment is used in a ViewPager.
- * It contains an ImageView which resource is modified in order to change the smiley that is shown.
+ * It contains an ImageView that shows a smiley.
+ * To modify the smiley, just change the image resource of the ImageView.
  */
 public class SmileyFragment extends Fragment {
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
+    /**
+     * Constant for the key of the bundle argument.
+     */
     private static final String BUNDLE_ARGS_SMILEY_ID = "BUNDLE_ARGS_SMILEY_ID";
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------

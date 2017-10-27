@@ -18,6 +18,8 @@
         The background is updated only if the position is changed.
         At application start, if the position to show is the item #0,
         then the background is unchanged and remains as the default one.
+        But the default background (white) is not the expected color
+        for the item #0.
         That is why, the default background must be defined with
         the faded_red color because it corresponds to the item #0.
     -->
