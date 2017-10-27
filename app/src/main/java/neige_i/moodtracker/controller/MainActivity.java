@@ -15,15 +15,20 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
+import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
+import neige_i.moodtracker.model.Storage;
 
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
+import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
@@ -68,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Constant for the commentary key in the preferences.
      */
     private final String PREF_KEY_COMMENTARY = "PREF_KEY_COMMENTARY";
+    private final String PREF_KEY_MOOD_ = "PREF_KEY_MOOD_";
+    private Storage mStorage;
 
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
@@ -112,12 +119,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (mCommentaryInput.getText().length() > 0) {
-                                    // Only consider the commentary if it is not empty
-                                    mCommentary = mCommentaryInput.getText().toString();
-                                    mSmiley = mMoodPager.getCurrentItem();
-                                    clearCommentaryPref = false;
-                                }
+                                mCommentary = mCommentaryInput.getText().toString();
+                                mSmiley = mMoodPager.getCurrentItem();
+                                clearCommentaryPref = mCommentaryInput.getText().length() == 0; // Clear commentary if it is empty
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_btn, null)
@@ -143,11 +147,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        // Save data
-        mPreferences.edit().putInt(PREF_KEY_SMILEY, mMoodPager.getCurrentItem()).apply();
-        mPreferences.edit().remove(PREF_KEY_COMMENTARY).apply();
-        if (mCommentary != null && !clearCommentaryPref)
-            mPreferences.edit().putString(PREF_KEY_COMMENTARY, mCommentary).apply();
+        // Save the mood of the current day
+//        mPreferences.edit().putInt(PREF_KEY_SMILEY, mMoodPager.getCurrentItem()).apply();
+//        mPreferences.edit().remove(PREF_KEY_COMMENTARY).apply();
+//        if (mCommentary != null && !clearCommentaryPref)
+//            mPreferences.edit().putString(PREF_KEY_COMMENTARY, mCommentary).apply();
+
+        mStorage.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : null));
+        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mStorage.getMoodList().get(0).toString()).apply();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
@@ -157,8 +164,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initMoodFromPrefs() {
         mPreferences = getPreferences(MODE_PRIVATE);
-        mSmiley = mPreferences.getInt(PREF_KEY_SMILEY, MOOD_DEFAULT);
-        mCommentary = mPreferences.getString(PREF_KEY_COMMENTARY, null);
+//        mSmiley = mPreferences.getInt(PREF_KEY_SMILEY, MOOD_DEFAULT);
+//        mCommentary = mPreferences.getString(PREF_KEY_COMMENTARY, null);
+
+        int moodIndex = 0;
+        List<String> moodHistory = new ArrayList<>();
+        String oneMood;
+        while ((oneMood = mPreferences.getString(PREF_KEY_MOOD_ + moodIndex++, null)) != null)
+            moodHistory.add(oneMood);
+
+        mStorage = new Storage();
+        mStorage.initMoodList(moodHistory);
+
+        Mood currentMood = mStorage.getMoodList().get(0);
+        if (currentMood.getSmiley() == MOOD_EMPTY)
+            currentMood.setSmiley(MOOD_DEFAULT);
+        mSmiley = currentMood.getSmiley();
+        mCommentary = currentMood.getCommentary();
     }
 
     /**

@@ -16,7 +16,7 @@ public class Storage {
      * List of Mood objects.
      * Its first element corresponds to the mood of the current day.
      * The rest of the list corresponds to the mood history.
-     * @see #initMoodList(String[])
+     * @see #initMoodList(List)
      * @see #updateMoodList()
      */
     private List<Mood> mMoodList;
@@ -38,14 +38,13 @@ public class Storage {
     // ----------------------------------------     OTHER METHODS     ---------------------------------------
 
     /**
-     * Initializes the {@link #mMoodList} with the specified String array.
-     * In a normal configuration, the String objects of the specified array are obtained with the
+     * Initializes the {@link #mMoodList} with the specified String list.
+     * In a normal configuration, the String objects of the specified list are obtained with the
      * {@link Mood#toString()} method.
-     * @param moodHistory the String array containing the mood history.
+     * @param moodHistory the String list containing the mood history.
      */
-    public void initMoodList(String[] moodHistory) {
+    public void initMoodList(List<String> moodHistory) {
         mMoodList = new ArrayList<>();
-        mMoodList.add(new Mood()); // Add the mood of the current day
 
         for (String oneMood : moodHistory) {
             // For each mood of the history, see if it corresponds to an empty one or to a normal one
@@ -60,6 +59,10 @@ public class Storage {
             if (mMoodList.size() == DAY_COUNT)
                 break;
         }
+
+        // Add the empty mood if there is no saved preferences
+        if (mMoodList.size() == 0)
+            mMoodList.add(new Mood());
     }
 
     /**

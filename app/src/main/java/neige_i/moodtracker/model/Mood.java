@@ -1,5 +1,7 @@
 package neige_i.moodtracker.model;
 
+import java.util.List;
+
 /**
  * This class represents the main object of the app.
  * A mood is defined by 2 elements: a smiley and a commentary.
@@ -101,7 +103,7 @@ public class Mood {
      *     <li>new Mood()         -------------> "{@value #MOOD_EMPTY }"</li>
      * </ul>
      * @return the representation of this Mood object.
-     * @see Storage#initMoodList(String[]) initMoodList(String[])
+     * @see Storage#initMoodList(List)  initMoodList(List)
      */
     @Override
     public String toString() {
