@@ -13,18 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
-import neige_i.moodtracker.model.History;
 
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
@@ -46,13 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private SharedPreferences mPreferences;
     /**
-     * Commentary of the current day.
+     * Mood of the current day.
      */
-    private String mCommentary;
-    /**
-     * Smiley of the current day.
-     */
-    private int mSmiley;
+    private Mood mCurrentMood;
     /**
      * Control variable to determinate actions to do regarding the commentary. It is useful in 2 cases.
      * <p>The first case is at initializing the dialog's EditText.<br />
@@ -64,17 +56,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * the old commentary must be cleared from the preferences.</p>
      * @see #mCommentaryInput
      */
-    private boolean clearCommentaryPref;
+    private boolean isCommentaryCorrect;
     /**
-     * Constant for the smiley key in the preferences.
+     * Constant for storing the mood in the preferences.
      */
-    private final String PREF_KEY_SMILEY = "PREF_KEY_SMILEY";
-    /**
-     * Constant for the commentary key in the preferences.
-     */
-    private final String PREF_KEY_COMMENTARY = "PREF_KEY_COMMENTARY";
     private final String PREF_KEY_MOOD_ = "PREF_KEY_MOOD_";
-    private History mHistory;
 
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
@@ -119,27 +105,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mCommentary = mCommentaryInput.getText().toString();
-                                mSmiley = mMoodPager.getCurrentItem();
-                                clearCommentaryPref = mCommentaryInput.getText().length() == 0; // Clear commentary if it is empty
+                                mCurrentMood.setCommentary(mCommentaryInput.getText().toString());
+                                mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
+                                isCommentaryCorrect = true;
                             }
                         })
                         .setNegativeButton(R.string.dialog_negative_btn, null)
                         .create();
+
                 // Automatically show the keyboard when the dialog appears
                 commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 commentaryDialog.show();
 
                 // Initialize the EditText
                 mCommentaryInput = commentaryDialog.findViewById(R.id.commentary_input);
-                if (/*mCommentary != null && */!clearCommentaryPref) {
-                    mCommentaryInput.setText(mCommentary);
-                    mCommentaryInput.setSelection(mCommentary.length());
+                if (isCommentaryCorrect) {
+                    mCommentaryInput.setText(mCurrentMood.getCommentary());
+                    mCommentaryInput.setSelection(mCurrentMood.getCommentary().length());
                 }
                 break;
             case R.id.history_ic:
-                // Start the HistoryActivity
-                Toast.makeText(MainActivity.this, "Start activity", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, HistoryActivity.class));
                 break;
         }
@@ -148,40 +133,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        // Save the mood of the current day
-//        mPreferences.edit().putInt(PREF_KEY_SMILEY, mMoodPager.getCurrentItem()).apply();
-//        mPreferences.edit().remove(PREF_KEY_COMMENTARY).apply();
-//        if (mCommentary != null && !clearCommentaryPref)
-//            mPreferences.edit().putString(PREF_KEY_COMMENTARY, mCommentary).apply();
 
-        mHistory.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : ""));
-        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mHistory.getMoodList().get(0).toString()).apply();
+        mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
+        if (!isCommentaryCorrect)
+            mCurrentMood.setCommentary(""); // Reset the commentary if incorrect
+
+        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mCurrentMood.toString()).apply();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
 
     /**
-     * Loads the mood of the current day. If the mood is not defined yet, the default values are used instead.
+     * Retrieves the mood of the current day from the preferences.
      */
     private void initMoodFromPrefs() {
         mPreferences = getPreferences(MODE_PRIVATE);
-//        mSmiley = mPreferences.getInt(PREF_KEY_SMILEY, MOOD_DEFAULT);
-//        mCommentary = mPreferences.getString(PREF_KEY_COMMENTARY, null);
 
-        int moodIndex = 0;
-        List<String> moodHistory = new ArrayList<>();
-        String oneMood;
-        while ((oneMood = mPreferences.getString(PREF_KEY_MOOD_ + moodIndex++, null)) != null)
-            moodHistory.add(oneMood);
+        // Initialize the current mood with the preferences
+        // If no preferences is found, then initialize with an empty mood
+        mCurrentMood = Mood.fromString(mPreferences.getString(PREF_KEY_MOOD_ + 0, new Mood().toString()));
 
-        mHistory = new History();
-        mHistory.initHistory(moodHistory);
-
-        Mood currentMood = mHistory.getMoodList().get(0);
-        if (currentMood.getSmiley() == MOOD_EMPTY)
-            currentMood.setSmiley(MOOD_DEFAULT);
-        mSmiley = currentMood.getSmiley();
-        mCommentary = currentMood.getCommentary();
+        // If the current mood is empty, then set it to default
+        if (mCurrentMood.getSmiley() == MOOD_EMPTY)
+            mCurrentMood.setSmiley(MOOD_DEFAULT);
     }
 
     /**
@@ -218,10 +192,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 mMoodPager.setBackgroundResource(MOOD_COLOURS[position]);
-                clearCommentaryPref = mMoodPager.getCurrentItem() != mSmiley;
+                isCommentaryCorrect = mMoodPager.getCurrentItem() == mCurrentMood.getSmiley();
             }
         });
-        mMoodPager.setCurrentItem(mSmiley);
+        mMoodPager.setCurrentItem(mCurrentMood.getSmiley());
     }
 
     /**
