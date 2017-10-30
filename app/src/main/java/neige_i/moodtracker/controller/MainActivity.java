@@ -24,7 +24,7 @@ import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
-import neige_i.moodtracker.model.Storage;
+import neige_i.moodtracker.model.History;
 
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private final String PREF_KEY_COMMENTARY = "PREF_KEY_COMMENTARY";
     private final String PREF_KEY_MOOD_ = "PREF_KEY_MOOD_";
-    private Storage mStorage;
+    private History mHistory;
 
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        if (mCommentary != null && !clearCommentaryPref)
 //            mPreferences.edit().putString(PREF_KEY_COMMENTARY, mCommentary).apply();
 
-        mStorage.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : ""));
-        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mStorage.getMoodList().get(0).toString()).apply();
+        mHistory.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : ""));
+        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mHistory.getMoodList().get(0).toString()).apply();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
@@ -174,10 +174,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         while ((oneMood = mPreferences.getString(PREF_KEY_MOOD_ + moodIndex++, null)) != null)
             moodHistory.add(oneMood);
 
-        mStorage = new Storage();
-        mStorage.initMoodList(moodHistory);
+        mHistory = new History();
+        mHistory.initHistory(moodHistory);
 
-        Mood currentMood = mStorage.getMoodList().get(0);
+        Mood currentMood = mHistory.getMoodList().get(0);
         if (currentMood.getSmiley() == MOOD_EMPTY)
             currentMood.setSmiley(MOOD_DEFAULT);
         mSmiley = currentMood.getSmiley();

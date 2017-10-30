@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by neige-i on 25/10/2017.
  */
-public class StorageTest {
+public class HistoryTest {
     @Test
     public void initMoodList() throws Exception {
         String[] strings = new String[] {   "2Mmm...",
@@ -31,9 +31,9 @@ public class StorageTest {
                                             new Mood(),
                                             new Mood(1, null),
                                             new Mood(0, "Angry"));
-        Storage storage = new Storage();
-        storage.initMoodList(strings);
-        assertEquals(moodList.toString(), storage.getMoodList().toString());
+        History history = new History();
+        history.initHistory(Arrays.asList(strings));
+        assertEquals(moodList.toString(), history.getMoodList().toString());
     }
 
 }

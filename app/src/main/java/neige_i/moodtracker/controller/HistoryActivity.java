@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import neige_i.moodtracker.R;
 
-import static neige_i.moodtracker.model.Storage.DAY_COUNT;
+import static neige_i.moodtracker.model.History.DAY_COUNT;
 
 public class HistoryActivity extends AppCompatActivity {
 
