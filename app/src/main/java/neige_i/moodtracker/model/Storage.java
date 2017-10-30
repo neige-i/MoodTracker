@@ -50,8 +50,7 @@ public class Storage {
             // For each mood of the history, see if it corresponds to an empty one or to a normal one
             // Then, add it to the list.
             int smiley = Character.getNumericValue(oneMood.charAt(0));
-            mMoodList.add(smiley == MOOD_EMPTY ? new Mood() :
-                    new Mood(smiley, oneMood.length() > 1 ? oneMood.substring(1) : null));
+            mMoodList.add(new Mood(smiley, oneMood.substring(1)));
 
             // If the maximum size of the list is reached, exit the loop and ignore the rest of the history.
             // This instruction is just to prevent getting a greater number of moods than expected.

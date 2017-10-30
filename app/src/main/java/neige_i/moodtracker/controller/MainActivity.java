@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // Initialize the EditText
                 mCommentaryInput = commentaryDialog.findViewById(R.id.commentary_input);
-                if (mCommentary != null && !clearCommentaryPref) {
+                if (/*mCommentary != null && */!clearCommentaryPref) {
                     mCommentaryInput.setText(mCommentary);
                     mCommentaryInput.setSelection(mCommentary.length());
                 }
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        if (mCommentary != null && !clearCommentaryPref)
 //            mPreferences.edit().putString(PREF_KEY_COMMENTARY, mCommentary).apply();
 
-        mStorage.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : null));
+        mStorage.getMoodList().set(0, new Mood(mMoodPager.getCurrentItem(), !clearCommentaryPref ? mCommentary : ""));
         mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mStorage.getMoodList().get(0).toString()).apply();
     }
 

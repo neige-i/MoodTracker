@@ -11,7 +11,7 @@ public class Mood {
 
     /**
      * Smiley value. The higher the value, the happier the smiley is.
-     * Its value is between 0 inclusive and {@value #MOOD_COUNT} exclusive.
+     * Its value is between 0 inclusive and {@link #MOOD_COUNT} exclusive.
      * It can also equal to {@link #MOOD_EMPTY} if no mood has been selected yet by the user.
      * @see #getSmiley()
      * @see #setSmiley(int)
@@ -20,7 +20,7 @@ public class Mood {
      */
     private int mSmiley;
     /**
-     * Commentary value. If null, then no commentary has been entered by the user.
+     * Commentary value.
      * @see #getCommentary()
      * @see #setCommentary(String)
      */
@@ -33,7 +33,7 @@ public class Mood {
      */
     public static final int MOOD_COUNT = 5;
     /**
-     * Default mood value. This is the mood that is displayed at first application start in the day.
+     * Default mood value. This is the mood that is displayed the first time the app is started in the day.
      */
     public static final int MOOD_DEFAULT = 3;
     /**
@@ -51,7 +51,7 @@ public class Mood {
      */
     public Mood() {
         mSmiley = MOOD_EMPTY;
-        mCommentary = null;
+        mCommentary = "";
     }
 
     /**
@@ -61,7 +61,7 @@ public class Mood {
      */
     public Mood(int smiley, String commentary) {
         setSmiley(smiley);
-        mCommentary = commentary;
+        setCommentary(commentary);
     }
 
     // --------------------------------------     GETTERS & SETTERS     -------------------------------------
@@ -77,9 +77,8 @@ public class Mood {
      * @param smiley the smiley value.
      */
     public void setSmiley(int smiley) {
-        mSmiley = MOOD_DEFAULT;
         if ((smiley < 0 || smiley >= MOOD_COUNT) && smiley != MOOD_EMPTY)
-            throw new IndexOutOfBoundsException("The value must be in the following range [0;" + MOOD_COUNT + "[.");
+            throw new IndexOutOfBoundsException("The smiley value must be in the following range [0;" + MOOD_COUNT + '[');
         mSmiley = smiley;
     }
 
@@ -88,25 +87,42 @@ public class Mood {
     }
 
     public void setCommentary(String commentary) {
+        if (commentary == null)
+            throw new IllegalArgumentException("A null String is not allowed as commentary");
         mCommentary = commentary;
+    }
+
+    // ---------------------------------------     STATIC METHODS     ---------------------------------------
+
+    /**
+     * Converts a String into a Mood object. This method is the opposite of {@link #toString()}.
+     * @param moodString the String to convert.
+     * @return the Mood object obtained from the specified String.
+     */
+    public static Mood fromString(String moodString) {
+        if (moodString == null)
+            throw new IllegalArgumentException("A null String cannot be converted into a Mood object");
+        else if (moodString.isEmpty())
+            throw new IllegalArgumentException("An empty String cannot be converted into a Mood object");
+        return new Mood(Character.getNumericValue(moodString.charAt(0)), moodString.substring(1));
     }
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
     /**
      * Returns the String representation of this object. This String will be used during loading and saving process.<br />
-     * The first character represents the smiley. The rest of the String represents the commentary (if not null).<br />
+     * The first character represents the smiley. The rest of the String represents the commentary (if not empty).<br />
      * Here are some examples of returned values for given Mood objects:
      * <ul>
      *     <li>new Mood(1, "foo") --> "1foo"</li>
-     *     <li>new Mood(3, null)  ----> "3" </li>
+     *     <li>new Mood(3, "")  ----> "3" </li>
      *     <li>new Mood()         -------------> "{@value #MOOD_EMPTY }"</li>
      * </ul>
-     * @return the representation of this Mood object.
+     * @return the String representation of this Mood object.
      * @see Storage#initMoodList(List)  initMoodList(List)
      */
     @Override
     public String toString() {
-        return mSmiley + (mCommentary != null ? mCommentary : "");
+        return mSmiley + mCommentary;
     }
 }
