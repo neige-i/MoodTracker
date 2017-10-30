@@ -4,9 +4,24 @@
     <string name="smiley_image">smiley image</string>
     <string name="history_icon">history icon</string>
     <string name="new_note_icon">new note icon</string>
+    <string name="commentary_icon">commentary icon</string>
 
     <string name="dialog_positive_btn">Validate</string>
     <string name="dialog_negative_btn">Cancel</string>
 
     <string name="edit_text_hint">Commentary</string>
+
+    <string name="empty_history_text">Empty history</string>
+    <string name="no_mood_text">No mood for that day</string>
+
+    <string-array name="mood_text_array">
+        <item>Yesterday</item>
+        <item>Two days ago</item>
+        <item>Three days ago</item>
+        <item>Four days ago</item>
+        <item>Five days ago</item>
+        <item>Six days ago</item>
+        <item>A week ago</item>
+    </string-array>
+
 </resources>

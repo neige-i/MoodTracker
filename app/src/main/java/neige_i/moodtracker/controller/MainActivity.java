@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.history_ic:
                 // Start the HistoryActivity
                 Toast.makeText(MainActivity.this, "Start activity", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, HistoryActivity.class));
                 break;
         }
     }
