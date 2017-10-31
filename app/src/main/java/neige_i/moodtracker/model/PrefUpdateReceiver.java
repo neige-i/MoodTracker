@@ -8,8 +8,8 @@ import android.util.Log;
 
 import java.util.Calendar;
 
+import static neige_i.moodtracker.controller.HistoryActivity.DAY_COUNT;
 import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
-import static neige_i.moodtracker.model.History.DAY_COUNT;
 
 /**
  * This Receiver does only one thing: update the preferences.

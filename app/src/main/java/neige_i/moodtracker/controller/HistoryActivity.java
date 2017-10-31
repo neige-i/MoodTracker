@@ -1,8 +1,8 @@
 package neige_i.moodtracker.controller;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,19 +12,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import neige_i.moodtracker.R;
-import neige_i.moodtracker.model.History;
 import neige_i.moodtracker.model.Mood;
 
 import static neige_i.moodtracker.controller.MainActivity.MOOD_COLORS;
 import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
-import static neige_i.moodtracker.model.History.DAY_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
 
 public class HistoryActivity extends AppCompatActivity {
+    // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
 
-    private SharedPreferences mPreferences;
-    private History mHistory;
+    /**
+     * List of moods that are saved in the history.
+     * The moods are sorted from the newest to the oldest.
+     */
+    private List<Mood> mMoodHistory;
+
+    // ---------------------------------------     CLASS VARIABLES     --------------------------------------
+
+    /**
+     * Number of moods that will be saved in history.
+     */
+    public static final int DAY_COUNT = 7;
+
+    // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +47,29 @@ public class HistoryActivity extends AppCompatActivity {
         initMainLayout();
     }
 
-    private void initHistoryFromPrefs() {
-        mPreferences = getSharedPreferences("controller.MainActivity", MODE_PRIVATE);
-        mHistory = new History();
+    // ---------------------------------------     PRIVATE METHODS     --------------------------------------
 
-        List<String> moodHistory = new ArrayList<>();
-        // The history and the current mood share the same key, only the current mood index is 0 and the history index begins at 1
+    private void initHistoryFromPrefs() {
+        SharedPreferences preferences = getSharedPreferences("controller.MainActivity", MODE_PRIVATE);
+
+        mMoodHistory = new ArrayList<>();
+        // Caution: the PREF_KEY_MOOD_0 corresponds to the current day mood. This variable must begin at 1
         int i = 1;
         String oneMood;
-        while ((oneMood = mPreferences.getString(PREF_KEY_MOOD + (i++), null)) != null) {
-            moodHistory.add(oneMood);
+        while ((oneMood = preferences.getString(PREF_KEY_MOOD + (i++), null)) != null) {
+            if (i > DAY_COUNT + 1)
+                throw new IllegalArgumentException("There are too many moods that are stored in prefs");
+            mMoodHistory.add(Mood.fromString(oneMood));
         }
-        mHistory.initHistory(moodHistory);
     }
 
     private void initMainLayout() {
         LinearLayout historyLayout = findViewById(R.id.history_layout);
         historyLayout.setWeightSum(DAY_COUNT);
 
-        List<Mood> moodList = mHistory.getMoodList();
-        if (!moodList.isEmpty()) {
-            for (int i = moodList.size() - 1; i >= 0; i--) {
-                Mood oneMood = moodList.get(i);
+        if (!mMoodHistory.isEmpty()) {
+            for (int i = mMoodHistory.size() - 1; i >= 0; i--) {
+                Mood oneMood = mMoodHistory.get(i);
                 LinearLayout oneMoodLayout = (LinearLayout) LayoutInflater.from(this)
                         .inflate(R.layout.single_mood_history, historyLayout, false);
                 oneMoodLayout.setWeightSum(MOOD_COUNT);
