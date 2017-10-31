@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +66,12 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void initMainLayout() {
-        LinearLayout historyLayout = findViewById(R.id.history_layout);
+        final LinearLayout historyLayout = findViewById(R.id.history_layout);
         historyLayout.setWeightSum(DAY_COUNT);
 
         if (!mMoodHistory.isEmpty()) {
             for (int i = mMoodHistory.size() - 1; i >= 0; i--) {
-                Mood oneMood = mMoodHistory.get(i);
+                final Mood oneMood = mMoodHistory.get(i);
                 LinearLayout oneMoodLayout = (LinearLayout) LayoutInflater.from(this)
                         .inflate(R.layout.single_mood_history, historyLayout, false);
                 oneMoodLayout.setWeightSum(MOOD_COUNT);
@@ -89,8 +91,20 @@ public class HistoryActivity extends AppCompatActivity {
                 globalLayout.setLayoutParams(new LinearLayout.LayoutParams(
                         0, LinearLayout.LayoutParams.MATCH_PARENT, weight));
 
+                ImageView commentaryIcon = oneMoodLayout.findViewById(R.id.commentary_ic);
+                commentaryIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView textView = (TextView) getLayoutInflater().inflate(R.layout.toast_message, historyLayout, false);
+                        textView.setText(oneMood.getCommentary());
+
+                        Toast toast = new Toast(HistoryActivity.this);
+                        toast.setView(textView);
+                        toast.show();
+                    }
+                });
                 if (!oneMood.getCommentary().isEmpty())
-                    oneMoodLayout.findViewById(R.id.commentary_ic).setVisibility(View.VISIBLE);
+                    commentaryIcon.setVisibility(View.VISIBLE);
 
                 historyLayout.addView(oneMoodLayout);
             }

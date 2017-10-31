@@ -15,4 +15,7 @@
     <!-- Default history background color -->
     <color name="half_transparent_grey">#80aaaaaa</color>
 
+    <!-- Toast background color -->
+    <color name="dark_grey">#303030</color>
+
 </resources>
