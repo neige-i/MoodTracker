@@ -12,7 +12,7 @@ public class History {
 
     /**
      * List of moods that are saved in the history.
-     * The moods are sorted from the oldest to the newest.
+     * The moods are sorted from the newest to the oldest.
      * @see #initHistory(List)
      * @see #addMoodToHistory(Mood)
      */
@@ -54,12 +54,10 @@ public class History {
      * @param moodToAdd the mood to add.
      */
     public void addMoodToHistory(Mood moodToAdd) {
-        mMoodList.add(moodToAdd);
+        mMoodList.add(0, moodToAdd); // Add the specified mood at the beginning of the list
 
-        // If the history is full, remove the oldest mood (i.e. the element #0)
+        // If the history is full, remove the oldest mood (i.e. the last element)
         if (mMoodList.size() > DAY_COUNT)
-            mMoodList.remove(0);
+            mMoodList.remove(DAY_COUNT);
     }
-
-
 }

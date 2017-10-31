@@ -11,4 +11,8 @@
     <color name="light_sage">#ffb8e986</color>
     <color name="banana_yellow">#fff9ec4f</color>
 
+
+    <!-- Default history background color -->
+    <color name="half_transparent_grey">#80aaaaaa</color>
+
 </resources>

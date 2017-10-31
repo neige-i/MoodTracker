@@ -21,7 +21,9 @@
 
         <receiver android:name=".model.PrefUpdateReceiver"/>
 
-        <activity android:name=".controller.HistoryActivity">
+        <activity
+            android:name=".controller.HistoryActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

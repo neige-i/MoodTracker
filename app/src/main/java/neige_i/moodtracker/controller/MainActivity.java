@@ -57,17 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @see #mCommentaryInput
      */
     private boolean isCommentaryCorrect;
-    /**
-     * Constant for storing the mood in the preferences.
-     */
-    private final String PREF_KEY_MOOD_ = "PREF_KEY_MOOD_";
 
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
      * Array containing the drawables of the different smileys.<br />
      * Each drawable has a specific background color.
-     * @see #MOOD_COLOURS
+     * @see #MOOD_COLORS
      */
     public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
     /**
@@ -75,7 +71,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Each color is the background for a specific drawable.
      * @see #MOOD_DRAWABLES
      */
-    public static final int[] MOOD_COLOURS = new int[MOOD_COUNT];
+    public static final int[] MOOD_COLORS = new int[MOOD_COUNT];
+    /**
+     * Constant for storing the mood in the preferences.
+     */
+    public static final String PREF_KEY_MOOD = "PREF_KEY_MOOD_";
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!isCommentaryCorrect)
             mCurrentMood.setCommentary(""); // Reset the commentary if incorrect
 
-        mPreferences.edit().putString(PREF_KEY_MOOD_ + 0, mCurrentMood.toString()).apply();
+        mPreferences.edit().putString(PREF_KEY_MOOD + 0, mCurrentMood.toString()).apply();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Initialize the current mood with the preferences
         // If no preferences is found, then initialize with an empty mood
-        mCurrentMood = Mood.fromString(mPreferences.getString(PREF_KEY_MOOD_ + 0, new Mood().toString()));
+        mCurrentMood = Mood.fromString(mPreferences.getString(PREF_KEY_MOOD + 0, new Mood().toString()));
 
         // If the current mood is empty, then set it to default
         if (mCurrentMood.getSmiley() == MOOD_EMPTY)
@@ -175,11 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @see #initDrawables()
      */
     private void initColours() {
-        MOOD_COLOURS[0] = R.color.faded_red;
-        MOOD_COLOURS[1] = R.color.warm_grey;
-        MOOD_COLOURS[2] = R.color.cornflower_blue_65;
-        MOOD_COLOURS[3] = R.color.light_sage;
-        MOOD_COLOURS[4] = R.color.banana_yellow;
+        MOOD_COLORS[0] = R.color.faded_red;
+        MOOD_COLORS[1] = R.color.warm_grey;
+        MOOD_COLORS[2] = R.color.cornflower_blue_65;
+        MOOD_COLORS[3] = R.color.light_sage;
+        MOOD_COLORS[4] = R.color.banana_yellow;
     }
 
     /**
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mMoodPager.setBackgroundResource(MOOD_COLOURS[position]);
+                mMoodPager.setBackgroundResource(MOOD_COLORS[position]);
                 isCommentaryCorrect = mMoodPager.getCurrentItem() == mCurrentMood.getSmiley();
             }
         });

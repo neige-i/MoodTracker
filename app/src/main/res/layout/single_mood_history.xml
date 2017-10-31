@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="1"
-    android:weightSum="1">
+    android:layout_weight="1">
 
     <RelativeLayout
+        android:id="@+id/single_mood_lyt"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -15,7 +15,9 @@
         <TextView
             android:id="@+id/day_txt"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
 
         <ImageView
             android:id="@+id/commentary_ic"
@@ -25,9 +27,11 @@
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
             android:src="@drawable/ic_comment_black_48px"
+            android:visibility="gone"
             android:contentDescription="@string/commentary_icon"/>
 
         <TextView
+            android:id="@+id/no_mood_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
