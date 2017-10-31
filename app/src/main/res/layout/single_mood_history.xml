@@ -26,8 +26,10 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
+            android:padding="5dp"
             android:src="@drawable/ic_comment_black_48px"
             android:visibility="gone"
+            android:background="@drawable/item_pressed"
             android:contentDescription="@string/commentary_icon"/>
 
         <TextView

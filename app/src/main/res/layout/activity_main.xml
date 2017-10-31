@@ -35,7 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
+        android:padding="5dp"
         android:src="@drawable/ic_note_add_black"
+        android:background="@drawable/item_pressed"
         android:contentDescription="@string/new_note_icon"/>
 
     <ImageView
@@ -45,7 +47,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="15dp"
+        android:padding="5dp"
         android:src="@drawable/ic_history_black"
+        android:background="@drawable/item_pressed"
         android:contentDescription="@string/history_icon"/>
 
 </RelativeLayout>
