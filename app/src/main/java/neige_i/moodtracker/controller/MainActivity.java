@@ -196,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         mMoodPager.setCurrentItem(mCurrentMood.getSmiley());
+        // Important initialization: isCommentaryCorrect is only updated at changing page
+        // But if the first shown mood is the #0, the page does not change and isCommentaryCorrect is not updated
+        // That is why, isCommentaryCorrect must be set to true,
+        // in order to show the commentary in the EditText when the start mood is #0
+        isCommentaryCorrect = true;
     }
 
     /**
