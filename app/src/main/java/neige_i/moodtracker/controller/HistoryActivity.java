@@ -62,15 +62,20 @@ public class HistoryActivity extends AppCompatActivity {
                         .inflate(R.layout.single_mood_history, historyLayout, false);
                 oneMoodLayout.setWeightSum(MOOD_COUNT);
 
-                View globalLayout = oneMoodLayout.findViewById(R.id.single_mood_lyt);
-                globalLayout.setBackgroundResource(MOOD_COLORS[oneMood.getSmiley()]);
-                globalLayout.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, oneMood.getSmiley() + 1));
-
                 ((TextView) oneMoodLayout.findViewById(R.id.day_txt))
                         .setText(getResources().getStringArray(R.array.mood_text_array)[i]);
 
-                if (oneMood.getSmiley() == MOOD_EMPTY)
+                View globalLayout = oneMoodLayout.findViewById(R.id.single_mood_lyt);
+                int weight;
+                if (oneMood.getSmiley() != MOOD_EMPTY) {
+                    globalLayout.setBackgroundResource(MOOD_COLORS[oneMood.getSmiley()]);
+                    weight = oneMood.getSmiley() + 1;
+                } else {
                     oneMoodLayout.findViewById(R.id.no_mood_txt).setVisibility(View.VISIBLE);
+                    weight = MOOD_COUNT;
+                }
+                globalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        0, LinearLayout.LayoutParams.MATCH_PARENT, weight));
 
                 if (!oneMood.getCommentary().isEmpty())
                     oneMoodLayout.findViewById(R.id.commentary_ic).setVisibility(View.VISIBLE);

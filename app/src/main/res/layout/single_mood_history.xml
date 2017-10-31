@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/no_mood_text"
+            android:textColor="@android:color/black"
             android:visibility="gone"/>
 
     </RelativeLayout>
