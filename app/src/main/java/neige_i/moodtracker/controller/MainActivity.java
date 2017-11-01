@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initMoodPager();
         findViewById(R.id.new_note_ic).setOnClickListener(this);
         findViewById(R.id.history_ic).setOnClickListener(this);
+        findViewById(R.id.share_ic).setOnClickListener(this);
     }
 
     @Override
@@ -126,6 +128,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.history_ic:
                 startActivity(new Intent(this, HistoryActivity.class));
+                break;
+            case R.id.share_ic:
+                String[] smileyTab = { ": (", ": /", ": |", ": )", ": D" };
+                String textToSend = smileyTab[mCurrentMood.getSmiley()] + "\n" + mCurrentMood.getCommentary() + "\n" +
+                        "------------------------------" + "\n" + getString(R.string.share_text);
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, textToSend);
+                shareIntent.setType("text/plain");
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
                 break;
         }
     }

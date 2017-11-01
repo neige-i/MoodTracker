@@ -1,10 +1,12 @@
+<!DOCTYPE resources [<!ENTITY appname "MoodTracker">]>
 <resources>
-    <string name="app_name">MoodTracker</string>
+    <string name="app_name">&appname;</string>
 
     <string name="smiley_image">smiley image</string>
     <string name="history_icon">history icon</string>
     <string name="new_note_icon">new note icon</string>
     <string name="commentary_icon">commentary icon</string>
+    <string name="share_icon">share icon</string>
 
     <string name="dialog_positive_btn">Validate</string>
     <string name="dialog_negative_btn">Cancel</string>
@@ -13,6 +15,9 @@
 
     <string name="empty_history_text">Empty history</string>
     <string name="no_mood_text">No mood for that day</string>
+
+    <string name="share_text">Share your daily mood with &appname;!</string>
+    <string name="share_title">Share your mood</string>
 
     <string-array name="mood_text_array">
         <item>Yesterday</item>

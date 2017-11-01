@@ -41,6 +41,18 @@
         android:contentDescription="@string/new_note_icon"/>
 
     <ImageView
+        android:id="@+id/share_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_share_black"
+        android:background="@drawable/item_pressed"
+        android:contentDescription="@string/share_icon"/>
+
+    <ImageView
         android:id="@+id/history_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
