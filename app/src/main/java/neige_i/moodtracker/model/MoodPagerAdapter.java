@@ -10,7 +10,7 @@ import static neige_i.moodtracker.controller.MainActivity.MOOD_DRAWABLES;
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 
 /**
- * This PagerAdapter allows user to swipe between the different moods.
+ * This PagerAdapter allows the user to swipe between the different Fragments that show a unique mood.
  */
 public class MoodPagerAdapter extends FragmentPagerAdapter {
     // ----------------------------------------     CONSTRUCTORS     ----------------------------------------

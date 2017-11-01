@@ -18,7 +18,7 @@ public class Mood {
      */
     private int mSmiley;
     /**
-     * Commentary value.
+     * Commentary value. If empty, then no commentary is provided.
      * @see #getCommentary()
      * @see #setCommentary(String)
      */
@@ -27,7 +27,7 @@ public class Mood {
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
-     * Number of available moods in the application.
+     * Number of available moods.
      */
     public static final int MOOD_COUNT = 5;
     /**
@@ -57,7 +57,7 @@ public class Mood {
      * @param smiley        the smiley value.
      * @param commentary    the commentary value.
      */
-    public Mood(int smiley, String commentary) {
+    private Mood(int smiley, String commentary) {
         setSmiley(smiley);
         setCommentary(commentary);
     }
@@ -70,9 +70,9 @@ public class Mood {
 
     /**
      * Sets the smiley value.
+     * @param smiley the smiley value.
      * @throws IndexOutOfBoundsException    if the specified smiley is not between 0 and {@link #MOOD_COUNT}
      *                                      or is not equal to {@link #MOOD_EMPTY}.
-     * @param smiley the smiley value.
      */
     public void setSmiley(int smiley) {
         if ((smiley < 0 || smiley >= MOOD_COUNT) && smiley != MOOD_EMPTY)
@@ -84,6 +84,11 @@ public class Mood {
         return mCommentary;
     }
 
+    /**
+     * Sets the commentary value.
+     * @param commentary the commentary value.
+     * @throws IllegalArgumentException if the specified commentary is null.
+     */
     public void setCommentary(String commentary) {
         if (commentary == null)
             throw new IllegalArgumentException("A null String is not allowed as commentary");
@@ -101,7 +106,9 @@ public class Mood {
      *     <li>new Mood(3, "")  -------> "3" </li>
      *     <li>new Mood()         -------------> "{@value #MOOD_EMPTY }"</li>
      * </ul>
+     * This method is the opposite of {@link #fromString(String)}.
      * @return the String representation of this Mood object.
+     * @see #fromString(String)
      */
     @Override
     public String toString() {
@@ -113,8 +120,9 @@ public class Mood {
     /**
      * Converts a String into a Mood object. This method is the opposite of {@link #toString()}.
      * @param moodString the String to convert.
-     * @return the Mood object obtained from the specified String.
-     * @throws IllegalArgumentException if moodString is null or empty.
+     * @return the Mood object that is obtained by converting the specified String.
+     * @see #toString()
+     * @throws IllegalArgumentException if the specified moodString is null or empty.
      */
     public static Mood fromString(String moodString) {
         if (moodString == null)

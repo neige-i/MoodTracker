@@ -26,6 +26,15 @@ import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
 import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
 
+/**
+ * This activity retrieves the mood of the current day from the preferences (if it exits).
+ * It initializes the UI to show the correct mood.
+ * It intercepts click events on ImageViews and performs appropriate actions:
+ *      - open a Dialog to see or modify the commentary,
+ *      - start a new Activity to show the history,
+ *      - open a Dialog to start a new Activity in another app to share the current mood.
+ * It also schedule a task that update preferences at a specified time.
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
 
@@ -34,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private VerticalViewPager mMoodPager;
     /**
-     * EditText, displayed in the dialog, that allows the user to put a commentary.
+     * EditText, displayed in the Dialog, that allows the user to put a commentary.
      */
     private EditText mCommentaryInput;
     /**
@@ -46,29 +55,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private Mood mCurrentMood;
     /**
-     * Control variable to determinate actions to do regarding the commentary. It is useful in 2 cases.
-     * <p>The first case is at initializing the dialog's EditText.<br />
-     * If the user already entered a commentary for a specified mood, he can modify it by displaying the dialog again.
-     * Meanwhile, if the user changes the mood, it would be inappropriate if he can still see his commentary.
-     * In this situation, the EditText must be empty.</p>
-     * <p>The second case is at saving the preferences.<br />
-     * If the user already entered a commentary for the current day and then changes the mood without putting a new one,
-     * the old commentary must be cleared from the preferences.</p>
-     * @see #mCommentaryInput
+     * <p>Control variable to determinate if the commentary is correct.<br />
+     * As the current mood is not saved at each ViewPager swipe, the commentary must be checked at two moments:
+     *      hen displaying it in the EditText,
+     *      when saving it into preferences.</p>
+     * <p>The situation is as follows: the user enters a commentary for a specified mood, and then swipes to another one.</p>
+     * <p>First case: the user opens the Dialog.
+     * It would be inappropriate if he can still see his commentary in the EditText.
+     * Therefore the EditText must not contain the commentary.</p>
+     * <p>Second case: the user exits the app without putting a new commentary.
+     * The current one is still in memory and must not be taken into consideration.
+     * Therefore the value to put into preferences is an empty String instead of the current commentary.</p>
      */
     private boolean isCommentaryCorrect;
 
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
-     * Array containing the drawables of the different smileys.<br />
+     * Array containing the drawable IDs of the different smileys.<br />
      * Each drawable has a specific background color.
      * @see #MOOD_COLORS
      */
     public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
     /**
-     * Array containing the colors of the different backgrounds.<br />
-     * Each color is the background for a specific drawable.
+     * Array containing the color IDs of the different backgrounds.<br />
+     * Each color is the background of a specific drawable.
      * @see #MOOD_DRAWABLES
      */
     public static final int[] MOOD_COLORS = new int[MOOD_COUNT];
@@ -76,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Constant for storing the mood in the preferences.
      */
     public static final String PREF_KEY_MOOD = "PREF_KEY_MOOD_";
+    /**
+     * Name of the preferences file where the data is saved.
+     */
+    public static String PREF_FILE_NAME;
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
@@ -83,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PREF_FILE_NAME = getLocalClassName();
 
         schedulePrefUpdate();
 
@@ -101,41 +118,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.new_note_ic:
-                AlertDialog commentaryDialog = new AlertDialog.Builder(this)
-                        .setView(R.layout.dialog_commentary)
-                        .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mCurrentMood.setCommentary(mCommentaryInput.getText().toString());
-                                mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
-                                isCommentaryCorrect = true;
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_negative_btn, null)
-                        .create();
-
-                // Automatically show the keyboard when the dialog appears
-                commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                commentaryDialog.show();
-
-                // Initialize the EditText
-                mCommentaryInput = commentaryDialog.findViewById(R.id.commentary_input);
-                if (isCommentaryCorrect) {
-                    mCommentaryInput.setText(mCurrentMood.getCommentary());
-                    mCommentaryInput.setSelection(mCurrentMood.getCommentary().length());
-                }
+                openCommentaryDialog();
                 break;
             case R.id.history_ic:
                 startActivity(new Intent(this, HistoryActivity.class));
                 break;
             case R.id.share_ic:
-                String[] smileyTab = { ": (", ": /", ": |", ": )", ": D" };
-                String textToSend = smileyTab[mCurrentMood.getSmiley()] + "\n" + mCurrentMood.getCommentary() + "\n" +
-                        "------------------------------" + "\n" + getString(R.string.share_text);
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, textToSend);
-                shareIntent.setType("text/plain");
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
+                shareCurrentMood();
                 break;
         }
     }
@@ -143,18 +132,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-
-        mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
-        if (!isCommentaryCorrect)
-            mCurrentMood.setCommentary(""); // Reset the commentary if incorrect
-
-        mPreferences.edit().putString(PREF_KEY_MOOD + 0, mCurrentMood.toString()).apply();
+        saveMoodToPrefs();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
 
     /**
      * Retrieves the mood of the current day from the preferences.
+     * @see #saveMoodToPrefs()
      */
     private void initMoodFromPrefs() {
         mPreferences = getPreferences(MODE_PRIVATE);
@@ -166,6 +151,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // If the current mood is empty, then set it to default
         if (mCurrentMood.getSmiley() == MOOD_EMPTY)
             mCurrentMood.setSmiley(MOOD_DEFAULT);
+    }
+
+    /**
+     * Save the mood of the current day into preferences.
+     * @see #initMoodFromPrefs()
+     */
+    private void saveMoodToPrefs() {
+        mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
+        if (!isCommentaryCorrect)
+            mCurrentMood.setCommentary(""); // Reset the commentary if incorrect
+
+        mPreferences.edit().putString(PREF_KEY_MOOD + 0, mCurrentMood.toString()).apply();
     }
 
     /**
@@ -196,30 +193,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Initializes the ViewPager.
      */
     private void initMoodPager() {
+        isCommentaryCorrect = true;
         mMoodPager = findViewById(R.id.mood_pager);
         mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
         mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                // Update the background and the control variable at each page swipe
                 mMoodPager.setBackgroundResource(MOOD_COLORS[position]);
                 isCommentaryCorrect = mMoodPager.getCurrentItem() == mCurrentMood.getSmiley();
             }
         });
-        mMoodPager.setCurrentItem(mCurrentMood.getSmiley());
-        // Important initialization: isCommentaryCorrect is only updated at changing page
-        // But if the first shown mood is the #0, the page does not change and isCommentaryCorrect is not updated
-        // That is why, isCommentaryCorrect must be set to true,
-        // in order to show the commentary in the EditText when the start mood is #0
-        isCommentaryCorrect = true;
+        mMoodPager.setCurrentItem(mCurrentMood.getSmiley()); // Initialize the ViewPager's current item
     }
 
     /**
-     * Initializes the alarm to update the preferences at a given time.
+     * Opens a Dialog which contains an EditText to put a commentary.
+     */
+    private void openCommentaryDialog() {
+        AlertDialog commentaryDialog = new AlertDialog.Builder(this)
+                .setView(R.layout.dialog_commentary)
+                .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mCurrentMood.setCommentary(mCommentaryInput.getText().toString());
+                        mCurrentMood.setSmiley(mMoodPager.getCurrentItem());
+                        isCommentaryCorrect = true;
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative_btn, null)
+                .create();
+
+        // Automatically show the keyboard when the dialog appears
+        assert commentaryDialog.getWindow() != null; // To remove the warning at the next instruction
+        commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        commentaryDialog.show();
+
+        // Initialize the EditText
+        mCommentaryInput = commentaryDialog.findViewById(R.id.commentary_input);
+        if (isCommentaryCorrect) {
+            mCommentaryInput.setText(mCurrentMood.getCommentary());
+            mCommentaryInput.setSelection(mCurrentMood.getCommentary().length());
+        }
+    }
+
+    /**
+     * Share the mood of the current day with other apps.
+     */
+    private void shareCurrentMood() {
+        String[] smileyTab = { ": (", ": /", ": |", ": )", ": D" };
+        String textToSend = smileyTab[mCurrentMood.getSmiley()] + "\n" + mCurrentMood.getCommentary() + "\n" +
+                "------------------------------" + "\n" + getString(R.string.share_text);
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND); // Implicit intent
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textToSend);
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
+    }
+
+    /**
+     * Initializes an alarm to update the preferences at a given time.<br />
+     * <strong>DOES NOT WORK CORRECTLY!</strong>
      */
     private void schedulePrefUpdate() {
         // The preferences must be updated at midnight
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis()); // See if mandatory
+        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
 
@@ -227,9 +266,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), 0);
 
         // Set the alarm to perform the tasks at midnight and repeat it every day
-        ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                                                                    calendar.getTimeInMillis(),
-                                                                                    AlarmManager.INTERVAL_DAY,
-                                                                                    broadcast);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        assert alarm != null; // To remove the warning at the next instruction
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
     }
 }
