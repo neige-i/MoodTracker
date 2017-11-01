@@ -16,7 +16,7 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url "https://maven.google.com"
+            url "https://maven.google.com"      // Use a Design Support Library > 26.0.0
         }
     }
 }

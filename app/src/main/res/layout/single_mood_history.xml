@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout corresponds to one mood in the history.
+    All the moods have the same layout, only the content changes.
+    This layout contains:
+        - a LinearLayout to use the weight property for its children,
+        - a RelativeLayout to contain all the elements of one mood
+            (the width of this layout may change according to the mood level),
+        - a TextView to display the day at which the mood was saved,
+        - an ImageView to show an icon if the mood contains a commentary
+        - a TextView to show a message is no mood is available.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="1">
+    android:layout_weight="1"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:id="@+id/single_mood_lyt"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:padding="5dp">
+        android:padding="5dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/day_txt"
@@ -42,5 +56,6 @@
             android:visibility="gone"/>
 
     </RelativeLayout>
+
 </LinearLayout>
 

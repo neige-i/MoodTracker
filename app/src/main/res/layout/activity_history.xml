@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout is the HistoryActivity content view.
+    This layout contains:
+        - a TextView to show a message if the history is empty,
+        - a LinearLayout to display the history (its content is defined programmatically).
+-->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

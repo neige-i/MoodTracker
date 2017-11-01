@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This layout is inflated in MainActivity.
-    This activity shows the current mood and
-    enables the user to change it with vertical swipes.
-    This activity also allows the user to add a commentary
-    or to access the history.
+    This layout is the MainActivity content view.
+    This layout contains:
+        - a VerticalViewPager to display the mood,
+        - an ImageView to add a commentary,
+        - an ImageView to show the history,
+        - an ImageView to share the mood.
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +13,7 @@
     android:layout_height="match_parent">
 
     <!--
-        CAUTION: INITIALIZE THE BACKGROUND TO FADE_RED COLOR!
+        CAUTION: INITIALIZE THE BACKGROUND TO FADED_RED COLOR!
         The following pager can have different backgrounds.
         Its adapter's default position is 0.
         The background is updated only if the position is changed.

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [<!ENTITY appname "MoodTracker">]>
+<resources>
+    <!-- ImageView content description -->
+    <string name="smiley_image">image de smiley</string>
+    <string name="history_icon">icône d\'historique</string>
+    <string name="new_note_icon">icône de nouvelle note</string>
+    <string name="commentary_icon">icône de commentaire</string>
+    <string name="share_icon">icône de partage</string>
+
+    <!-- Dialog Button text -->
+    <string name="dialog_positive_btn">Valider</string>
+    <string name="dialog_negative_btn">Annuler</string>
+
+    <!-- EditText hint -->
+    <string name="edit_text_hint">Commentaire</string>
+
+    <!-- TextView content -->
+    <string name="empty_history_text">Historique vide</string>
+    <string name="no_mood_text">Aucune humeur pour ce jour</string>
+    <string-array name="mood_text_array">
+        <item>Hier</item>
+        <item>Avant-hier</item>
+        <item>Il y a trois jours</item>
+        <item>Il y a quatre jours</item>
+        <item>Il y a cinq jours</item>
+        <item>Il y a six jours</item>
+        <item>Il y a une semaine</item>
+    </string-array>
+
+    <!-- Share Intent content -->
+    <string name="share_text">Partage ton humeur du jour avec &appname; !</string>
+    <string name="share_title">Partage ton humeur</string>
+
+</resources>

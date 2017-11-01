@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This drawable is used to change ImageView background when it is clicked. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true" android:drawable="@color/half_transparent_grey"/>
     <item android:drawable="@android:color/transparent"/>

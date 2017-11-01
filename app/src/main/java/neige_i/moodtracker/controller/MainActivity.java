@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.new_note_ic:
                 AlertDialog commentaryDialog = new AlertDialog.Builder(this)
-                        .setView(R.layout.commentary_dialog_layout)
+                        .setView(R.layout.dialog_commentary)
                         .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

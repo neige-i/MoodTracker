@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This layout is inflated in SmileyFragment.
-    This fragment is used in a ViewPager to swipe between
-    the different smileys.
+    This layout is the main view of SmileyFragment.
+    It is used inside a ViewPager.
+    It contains an ImageView that shows the current mood.
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
