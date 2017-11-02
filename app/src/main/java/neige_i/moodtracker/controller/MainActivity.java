@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Name of the preferences file where the data is saved.
      */
-    public static String PREF_FILE_NAME;
+    public static final String PREF_FILE_NAME = "mood";
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
@@ -98,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        PREF_FILE_NAME = getLocalClassName();
 
         schedulePrefUpdate();
 
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @see #saveMoodToPrefs()
      */
     private void initMoodFromPrefs() {
-        mPreferences = getPreferences(MODE_PRIVATE);
+        mPreferences = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
 
         // Initialize the current mood with the preferences
         // If no preferences is found, then initialize with an empty mood
@@ -241,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Share the mood of the current day with other apps.
      */
     private void shareCurrentMood() {
+        saveMoodToPrefs();
+
         String[] smileyTab = { ": (", ": /", ": |", ": )", ": D" };
         String textToSend = smileyTab[mCurrentMood.getSmiley()] + "\n" + mCurrentMood.getCommentary() + "\n" +
                 "------------------------------" + "\n" + getString(R.string.share_text);

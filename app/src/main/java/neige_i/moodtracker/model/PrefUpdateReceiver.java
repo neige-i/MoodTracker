@@ -30,7 +30,7 @@ public class PrefUpdateReceiver extends BroadcastReceiver {
         SharedPreferences preferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         int currentDay = Calendar.getInstance().get(Calendar.DATE);
 
-        Log.i("Receiver", "Day " + currentDay); // Log to check if this class is called
+        Log.i("Update_Receiver", "Called for the day " + currentDay); // Log to check if this class is called
 
         // If no current day is saved in preferences
         if (preferences.getInt(PREF_KEY_CURRENT_DAY, 0) == 0)
@@ -61,8 +61,10 @@ public class PrefUpdateReceiver extends BroadcastReceiver {
 
         editor.putString(PREF_KEY_MOOD + 0, new Mood().toString()); // Reset the first mood with the empty value
 
-        editor.putInt("Current day", currentDay); // Update the currentDay preferences
+        editor.putInt(PREF_KEY_CURRENT_DAY, currentDay); // Update the currentDay preferences
 
         editor.apply(); // Apply all modifications
+
+        Log.i("Update_Receiver", "Prefs updated"); // Log to check if this method is called
     }
 }
