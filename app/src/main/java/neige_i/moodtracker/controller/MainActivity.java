@@ -99,17 +99,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        schedulePrefUpdate();
-
-        initMoodFromPrefs();
-
         initDrawables();
         initColours();
+
+        initMoodFromPrefs();
 
         initMoodPager();
         findViewById(R.id.new_note_ic).setOnClickListener(this);
         findViewById(R.id.history_ic).setOnClickListener(this);
         findViewById(R.id.share_ic).setOnClickListener(this);
+
+        schedulePrefUpdate();
     }
 
     @Override
@@ -252,22 +252,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Initializes an alarm to update the preferences at a given time.<br />
-     * <strong>DOES NOT WORK CORRECTLY!</strong>
+     * Initializes an alarm to update the preferences at a given time.
      */
     private void schedulePrefUpdate() {
-        // The preferences must be updated at midnight
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
+        // The alarm is correctly triggered at midnight, every day
+        // But it is also triggered at each app launch, which is not desired
+        // To prevent this, the actions in this method are only performed at the first app launch
+        if (mPreferences.getString(PREF_KEY_MOOD + 0, null) == null) {
+            // The preferences must be updated at midnight
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
 
-        // Set the class that will handle the actions to perform
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), 0);
+            // Set the class that will handle the actions to perform
+            PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), 0);
 
-        // Set the alarm to perform the tasks at midnight and repeat it every day
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        assert alarm != null; // To remove the warning at the next instruction
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
+            // Set the alarm to perform the tasks at midnight and repeat it every day
+            AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            assert alarm != null; // To remove the warning at the next instruction
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
+        }
     }
 }
