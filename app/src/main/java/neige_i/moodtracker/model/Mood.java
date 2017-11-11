@@ -57,7 +57,7 @@ public class Mood {
      * @param smiley        the smiley value.
      * @param commentary    the commentary value.
      */
-    private Mood(int smiley, String commentary) {
+    Mood(int smiley, String commentary) {
         setSmiley(smiley);
         setCommentary(commentary);
     }
@@ -113,6 +113,16 @@ public class Mood {
     @Override
     public String toString() {
         return mSmiley + mCommentary;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Mood mood = (Mood) o;
+
+        return mSmiley == mood.mSmiley && mCommentary.equals(mood.mCommentary);
     }
 
     // ---------------------------------------     STATIC METHODS     ---------------------------------------
