@@ -1,5 +1,8 @@
 package neige_i.moodtracker.controller;
 
+import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
+import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,24 +11,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import java.util.Calendar;
 
-import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
-
-import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
-import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
-import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+import neige_i.moodtracker.ui.Smiley;
 
 /**
  * This activity retrieves the mood of the current day from the preferences (if it exits).
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Vertical ViewPager that allows the user to swipe between the different smileys.
      */
-    private VerticalViewPager mMoodPager;
+    private ViewPager2 mMoodPager;
     /**
      * EditText, displayed in the Dialog, that allows the user to put a commentary.
      */
@@ -73,18 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
-     * Array containing the drawable IDs of the different smileys.<br />
-     * Each drawable has a specific background color.
-     * @see #MOOD_COLORS
-     */
-    public static final int[] MOOD_DRAWABLES = new int[MOOD_COUNT];
-    /**
-     * Array containing the color IDs of the different backgrounds.<br />
-     * Each color is the background of a specific drawable.
-     * @see #MOOD_DRAWABLES
-     */
-    public static final int[] MOOD_COLORS = new int[MOOD_COUNT];
-    /**
      * Constant for storing the mood in the preferences.
      */
     public static final String PREF_KEY_MOOD = "PREF_KEY_MOOD_";
@@ -99,9 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        initDrawables();
-        initColours();
 
         initMoodFromPrefs();
 
@@ -165,41 +150,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Initializes the array from the saddest smiley to the happiest one.
-     * @see #initColours()
-     */
-    private void initDrawables() {
-        MOOD_DRAWABLES[0] = R.drawable.smiley_sad;
-        MOOD_DRAWABLES[1] = R.drawable.smiley_disappointed;
-        MOOD_DRAWABLES[2] = R.drawable.smiley_normal;
-        MOOD_DRAWABLES[3] = R.drawable.smiley_happy;
-        MOOD_DRAWABLES[4] = R.drawable.smiley_super_happy;
-    }
-
-    /**
-     * Initializes the array from the "saddest" color to the "happiest" one.
-     * @see #initDrawables()
-     */
-    private void initColours() {
-        MOOD_COLORS[0] = R.color.faded_red;
-        MOOD_COLORS[1] = R.color.warm_grey;
-        MOOD_COLORS[2] = R.color.cornflower_blue_65;
-        MOOD_COLORS[3] = R.color.light_sage;
-        MOOD_COLORS[4] = R.color.banana_yellow;
-    }
-
-    /**
      * Initializes the ViewPager.
      */
     private void initMoodPager() {
         isCommentaryCorrect = true;
         mMoodPager = findViewById(R.id.mood_pager);
-        mMoodPager.setAdapter(new MoodPagerAdapter(getSupportFragmentManager()));
-        mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mMoodPager.setAdapter(new MoodPagerAdapter(this));
+        mMoodPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 // Update the background and the control variable at each page swipe
-                mMoodPager.setBackgroundResource(MOOD_COLORS[position]);
+                mMoodPager.setBackgroundResource(Smiley.values()[position].getColor());
                 isCommentaryCorrect = mMoodPager.getCurrentItem() == mCurrentMood.getSmiley();
             }
         });

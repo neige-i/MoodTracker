@@ -1,8 +1,12 @@
 package neige_i.moodtracker.controller;
 
+import static neige_i.moodtracker.controller.MainActivity.PREF_FILE_NAME;
+import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
+import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
+import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
-
-import static neige_i.moodtracker.controller.MainActivity.MOOD_COLORS;
-import static neige_i.moodtracker.controller.MainActivity.PREF_FILE_NAME;
-import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
-import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
-import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+import neige_i.moodtracker.ui.Smiley;
 
 public class HistoryActivity extends AppCompatActivity {
     // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
@@ -114,7 +115,7 @@ public class HistoryActivity extends AppCompatActivity {
         int weight;
         if (mood.getSmiley() != MOOD_EMPTY) {
             // If the mood is not empty, set the correct background and a proportional width
-            moodLayout.setBackgroundResource(MOOD_COLORS[mood.getSmiley()]);
+            moodLayout.setBackgroundResource(Smiley.values()[mood.getSmiley()].getColor());
             weight = mood.getSmiley() + 1;
         } else {
             // If the mood is empty, make the "no mood" TextView visible and set a maximal width

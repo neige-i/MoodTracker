@@ -1,33 +1,36 @@
 package neige_i.moodtracker.model;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import neige_i.moodtracker.controller.SmileyFragment;
-
-import static neige_i.moodtracker.controller.MainActivity.MOOD_DRAWABLES;
-import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
+import neige_i.moodtracker.ui.Smiley;
 
 /**
  * This PagerAdapter allows the user to swipe between the different Fragments that show a unique mood.
  */
-public class MoodPagerAdapter extends FragmentPagerAdapter {
+public class MoodPagerAdapter extends FragmentStateAdapter {
+
+    private final Smiley[] allSmileys = Smiley.values();
+
     // ----------------------------------------     CONSTRUCTORS     ----------------------------------------
 
-    public MoodPagerAdapter(FragmentManager fm) {
-        super(fm);
+    public MoodPagerAdapter(FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
     }
 
     // -------------------------------------     OVERRIDDEN METHODS     -------------------------------------
 
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
-        return SmileyFragment.newInstance(MOOD_DRAWABLES[position]);
+    public Fragment createFragment(int position) {
+        return SmileyFragment.newInstance(allSmileys[position].getEmoji());
     }
 
     @Override
-    public int getCount() {
-        return MOOD_COUNT;
+    public int getItemCount() {
+        return allSmileys.length;
     }
 }
