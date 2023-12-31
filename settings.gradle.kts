@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "MoodTracker"
-include ':app'
+include(":app")
