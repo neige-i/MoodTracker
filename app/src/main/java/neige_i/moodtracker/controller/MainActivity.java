@@ -1,5 +1,9 @@
 package neige_i.moodtracker.controller;
 
+import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
+import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
+import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,12 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.Calendar;
 
@@ -21,10 +26,6 @@ import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.MoodPagerAdapter;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
-
-import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
-import static neige_i.moodtracker.model.Mood.MOOD_DEFAULT;
-import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
 
 /**
  * This activity retrieves the mood of the current day from the preferences (if it exits).
@@ -114,16 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.new_note_ic:
-                openCommentaryDialog();
-                break;
-            case R.id.history_ic:
-                startActivity(new Intent(this, HistoryActivity.class));
-                break;
-            case R.id.share_ic:
-                shareCurrentMood();
-                break;
+        if (v.getId() == R.id.new_note_ic) {
+            openCommentaryDialog();
+        } else if (v.getId() == R.id.history_ic) {
+            startActivity(new Intent(this, HistoryActivity.class));
+        } else if (v.getId() == R.id.share_ic) {
+            shareCurrentMood();
         }
     }
 
