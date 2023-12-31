@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             calendar.set(Calendar.MINUTE, 0);
 
             // Set the class that will handle the actions to perform
-            PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), 0);
+            PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, new Intent(this, PrefUpdateReceiver.class), PendingIntent.FLAG_IMMUTABLE);
 
             // Set the alarm to perform the tasks at midnight and repeat it every day
             AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
