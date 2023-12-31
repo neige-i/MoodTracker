@@ -1,13 +1,13 @@
 package neige_i.moodtracker.model;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
-import neige_i.moodtracker.controller.SmileyFragment;
-
 import static neige_i.moodtracker.controller.MainActivity.MOOD_DRAWABLES;
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
+import neige_i.moodtracker.controller.SmileyFragment;
 
 /**
  * This PagerAdapter allows the user to swipe between the different Fragments that show a unique mood.
