@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getPagerUiLiveData().observe(this, this::updateMoodPager);
+        viewModel.getMoodToShareLiveData().observe(this, this::shareCurrentMood);
 
         initColours();
 
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.history_ic) {
             startActivity(new Intent(this, HistoryActivity.class));
         } else if (v.getId() == R.id.share_ic) {
-            shareCurrentMood();
+            viewModel.onMoodShareRequested();
         }
     }
 
@@ -189,17 +190,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new MoodCommentDialogFragment().show(getSupportFragmentManager(), null);
     }
 
-    /**
-     * Share the mood of the current day with other apps.
-     */
-    private void shareCurrentMood() {
-        saveMoodToPrefs();
+    private void shareCurrentMood(MoodToShareEvent moodToShareEvent) {
+        String textToSend = moodToShareEvent.getEmoticon() + "\n"
+                + moodToShareEvent.getComment() + "\n"
+                + "----------" + "\n"
+                + getString(R.string.share_text);
 
-        String[] smileyTab = { ": (", ": /", ": |", ": )", ": D" };
-        String textToSend = smileyTab[mCurrentMood.getSmiley()] + "\n" + mCurrentMood.getCommentary() + "\n" +
-                "------------------------------" + "\n" + getString(R.string.share_text);
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND); // Implicit intent
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, textToSend);
         shareIntent.setType("text/plain");
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
