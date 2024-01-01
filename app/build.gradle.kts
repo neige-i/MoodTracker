@@ -32,6 +32,11 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileOptions {
         // Desugar - Flag to enable support for the new language APIs for AGP 4.1+
         isCoreLibraryDesugaringEnabled = true
@@ -62,8 +67,6 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
-
-    implementation("com.github.castorflex.verticalviewpager:library:19.0.1")
 
     testImplementation("junit:junit:4.13.2")
 
