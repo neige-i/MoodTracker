@@ -18,6 +18,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Desugar - Required when setting minSdkVersion to 20 or lower
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -30,6 +33,9 @@ android {
         }
     }
     compileOptions {
+        // Desugar - Flag to enable support for the new language APIs for AGP 4.1+
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -39,6 +45,8 @@ android {
 }
 
 dependencies {
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
