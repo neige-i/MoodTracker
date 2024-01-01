@@ -17,10 +17,12 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.Calendar;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
@@ -36,6 +38,7 @@ import neige_i.moodtracker.model.PrefUpdateReceiver;
  *      - open a Dialog to start a new Activity in another app to share the current mood.
  * It also schedule a task that update preferences at a specified time.
  */
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
 
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private boolean isCommentaryCorrect;
 
+    private MainViewModel viewModel;
+
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
@@ -99,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.getPagerUiLiveData().observe(this, this::updateMoodPager);
 
         initDrawables();
         initColours();
@@ -194,12 +202,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMoodPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                // Update the background and the control variable at each page swipe
-                mMoodPager.setBackgroundResource(MOOD_COLORS[position]);
+                // Update the control variable at each page swipe
                 isCommentaryCorrect = mMoodPager.getCurrentItem() == mCurrentMood.getSmiley();
+                viewModel.onPagerPositionChanged(position);
             }
         });
-        mMoodPager.setCurrentItem(mCurrentMood.getSmiley()); // Initialize the ViewPager's current item
+    }
+
+    private void updateMoodPager(MoodPagerUi moodPagerUi) {
+        mMoodPager.setCurrentItem(moodPagerUi.getPosition());
+        mMoodPager.setBackgroundResource(moodPagerUi.getBackgroundColor());
     }
 
     /**
