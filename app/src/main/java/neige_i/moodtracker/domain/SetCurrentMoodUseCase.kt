@@ -20,4 +20,11 @@ class SetCurrentMoodUseCase @Inject constructor(
             upsertMoodUseCase.invoke(newMood)
         }
     }
+
+    suspend fun updateComment(newComment: String) {
+        val updatedMood = getCurrentMoodUseCase.invoke()
+            .first()
+            .copy(comment = newComment)
+        upsertMoodUseCase.invoke(updatedMood)
+    }
 }

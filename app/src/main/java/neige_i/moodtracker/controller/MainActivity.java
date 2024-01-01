@@ -7,15 +7,11 @@ import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -26,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import neige_i.moodtracker.R;
 import neige_i.moodtracker.model.Mood;
 import neige_i.moodtracker.model.PrefUpdateReceiver;
+import neige_i.moodtracker.ui.comment.MoodCommentDialogFragment;
 import neige_i.moodtracker.ui.emoji.EmojiPagerAdapter;
 
 /**
@@ -42,10 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // -------------------------------------     INSTANCE VARIABLES     -------------------------------------
 
     private ViewPager2 emojiPager;
-    /**
-     * EditText, displayed in the Dialog, that allows the user to put a commentary.
-     */
-    private EditText mCommentaryInput;
     /**
      * SharedPreferences that allows data saving/loading.
      */
@@ -193,30 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Opens a Dialog which contains an EditText to put a commentary.
      */
     private void openCommentaryDialog() {
-        AlertDialog commentaryDialog = new AlertDialog.Builder(this)
-                .setView(R.layout.dialog_commentary)
-                .setPositiveButton(R.string.dialog_positive_btn, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mCurrentMood.setCommentary(mCommentaryInput.getText().toString());
-                        mCurrentMood.setSmiley(emojiPager.getCurrentItem());
-                        isCommentaryCorrect = true;
-                    }
-                })
-                .setNegativeButton(R.string.dialog_negative_btn, null)
-                .create();
-
-        // Automatically show the keyboard when the dialog appears
-        assert commentaryDialog.getWindow() != null; // To remove the warning at the next instruction
-        commentaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        commentaryDialog.show();
-
-        // Initialize the EditText
-        mCommentaryInput = commentaryDialog.findViewById(R.id.commentary_input);
-        if (isCommentaryCorrect) {
-            mCommentaryInput.setText(mCurrentMood.getCommentary());
-            mCommentaryInput.setSelection(mCurrentMood.getCommentary().length());
-        }
+        new MoodCommentDialogFragment().show(getSupportFragmentManager(), null);
     }
 
     /**

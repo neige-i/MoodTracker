@@ -8,7 +8,8 @@
     <string name="commentary_icon">icône de commentaire</string>
     <string name="share_icon">icône de partage</string>
 
-    <!-- Dialog Button text -->
+    <!-- Dialog -->
+    <string name="dialog_title">Écrivez un commentaire</string>
     <string name="dialog_positive_btn">Valider</string>
     <string name="dialog_negative_btn">Annuler</string>
 
