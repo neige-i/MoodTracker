@@ -1,4 +1,4 @@
-package neige_i.moodtracker.controller
+package neige_i.moodtracker.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +18,7 @@ import neige_i.moodtracker.ui.utils.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     getCurrentMoodUseCase: GetCurrentMoodUseCase,
     private val setCurrentMoodUseCase: SetCurrentMoodUseCase,
 ) : ViewModel() {

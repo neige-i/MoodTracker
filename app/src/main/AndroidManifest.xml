@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="neige_i.moodtracker">
+    package="neige_i.moodtracker">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MoodApp"
@@ -14,25 +14,25 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <activity
-            android:name=".controller.MainActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".controller.HistoryActivity"
-            android:screenOrientation="portrait"/>
+            android:name=".ui.history.HistoryActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".model.PrefUpdateReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

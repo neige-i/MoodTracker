@@ -1,10 +1,9 @@
-package neige_i.moodtracker.controller;
+package neige_i.moodtracker.ui.history;
 
-import static neige_i.moodtracker.controller.MainActivity.MOOD_COLORS;
-import static neige_i.moodtracker.controller.MainActivity.PREF_FILE_NAME;
-import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
 import static neige_i.moodtracker.model.Mood.MOOD_COUNT;
 import static neige_i.moodtracker.model.Mood.MOOD_EMPTY;
+import static neige_i.moodtracker.ui.home.HomeActivity.PREF_FILE_NAME;
+import static neige_i.moodtracker.ui.home.HomeActivity.PREF_KEY_MOOD;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,6 +35,11 @@ public class HistoryActivity extends AppCompatActivity {
     // ---------------------------------------     CLASS VARIABLES     --------------------------------------
 
     /**
+     * Array containing the color IDs of the different backgrounds.<br />
+     * Each color is the background of a specific drawable.
+     */
+    private static final int[] MOOD_COLORS = new int[MOOD_COUNT];
+    /**
      * Number of moods that will be saved in history.
      */
     public static final int DAY_COUNT = 7;
@@ -47,12 +51,25 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        initColours();
+
         initHistoryFromPrefs();
 
         initHistoryLayout();
     }
 
     // ---------------------------------------     PRIVATE METHODS     --------------------------------------
+
+    /**
+     * Initializes the array from the "saddest" color to the "happiest" one.
+     */
+    private void initColours() {
+        MOOD_COLORS[0] = R.color.faded_red;
+        MOOD_COLORS[1] = R.color.warm_grey;
+        MOOD_COLORS[2] = R.color.cornflower_blue_65;
+        MOOD_COLORS[3] = R.color.light_sage;
+        MOOD_COLORS[4] = R.color.banana_yellow;
+    }
 
     /**
      * Retrieves the moods of the history from the preferences.
