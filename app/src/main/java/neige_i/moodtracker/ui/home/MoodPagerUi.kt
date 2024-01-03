@@ -1,4 +1,4 @@
-package neige_i.moodtracker.controller
+package neige_i.moodtracker.ui.home
 
 import androidx.annotation.ColorRes
 

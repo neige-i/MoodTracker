@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/mood_pager"
+        android:id="@+id/home_emoji_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:background="@color/light_sage" />
 
     <ImageView
-        android:id="@+id/new_note_ic"
+        android:id="@+id/home_new_note_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -23,7 +23,7 @@
         android:contentDescription="@string/new_note_icon"/>
 
     <ImageView
-        android:id="@+id/share_ic"
+        android:id="@+id/home_share_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -35,7 +35,7 @@
         android:contentDescription="@string/share_icon"/>
 
     <ImageView
-        android:id="@+id/history_ic"
+        android:id="@+id/home_history_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

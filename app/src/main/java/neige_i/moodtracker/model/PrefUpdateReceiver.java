@@ -1,13 +1,13 @@
 package neige_i.moodtracker.model;
 
+import static neige_i.moodtracker.ui.history.HistoryActivity.DAY_COUNT;
+import static neige_i.moodtracker.ui.home.HomeActivity.PREF_FILE_NAME;
+import static neige_i.moodtracker.ui.home.HomeActivity.PREF_KEY_MOOD;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import static neige_i.moodtracker.controller.HistoryActivity.DAY_COUNT;
-import static neige_i.moodtracker.controller.MainActivity.PREF_FILE_NAME;
-import static neige_i.moodtracker.controller.MainActivity.PREF_KEY_MOOD;
 
 /**
  * This Receiver does only one thing: update the preferences.
